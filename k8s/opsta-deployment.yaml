@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opsta-dev-web
+  namespace: student14-opsta-dev
+  labels:
+    app: opsta-dev-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opsta-dev-web
+  template:
+    metadata:
+      labels:
+        app: opsta-dev-web
+    spec:
+      containers:
+      - name: opsta-dev-web
+        image: ghcr.io/jakkapongqcue/opsta-web:dev
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: web-port
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+      imagePullSecrets:
+      - name: registry-github
